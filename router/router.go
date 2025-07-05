@@ -3,6 +3,7 @@ package router
 import (
 	"github.com/gin-gonic/gin"
 	"os"
+	"timeMonitorServer/controller"
 )
 
 func Init() *gin.Engine {
@@ -20,6 +21,8 @@ func Init() *gin.Engine {
 			"message": "pong",
 		})
 	})
+
+	router.POST("upload", controller.Upload)
 
 	router.Run() // 监听并在 0.0.0.0:8080 上启动服务
 	return router
