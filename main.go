@@ -10,13 +10,7 @@ import (
 func main() {
 	config.InitEnv()
 
-	err := global.InitRedis()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	err = global.InitMysql()
+	err := global.InitMysql()
 	if err != nil {
 		fmt.Println(err)
 		return
