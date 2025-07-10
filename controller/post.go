@@ -1,14 +1,14 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
-	_type "timeMonitorServer/type"
+	"timeMonitorServer/models"
+	"timeMonitorServer/types"
 )
 
 func Upload(c *gin.Context) {
 
-	form := _type.Times{}
+	var form []types.UploadForm
 
 	err := c.ShouldBindJSON(&form)
 	if err != nil {
@@ -19,13 +19,10 @@ func Upload(c *gin.Context) {
 		return
 	}
 
-	for i := range form.Data {
-		fmt.Println(form.Data[i])
-	}
+	models.InsertAllProcessAndTitle(form)
 
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "ok",
-		"data": form.Data,
 	})
 }

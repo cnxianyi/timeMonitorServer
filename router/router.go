@@ -24,6 +24,8 @@ func Init() *gin.Engine {
 
 	router.POST("upload", controller.Upload)
 
+	router.GET("/", controller.All)
+
 	router.Run() // 监听并在 0.0.0.0:8080 上启动服务
 	return router
 }
