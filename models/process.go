@@ -1,15 +1,26 @@
 package models
 
 import (
+	"fmt"
 	"log"
-	"time"
 	"timeMonitorServer/global"
 	"timeMonitorServer/types"
 )
 
-func FindProcessId(form types.ProcessModel) types.ProcessModel {
+func FindUserIdByUserName(username string) (uint, error) {
+	var res types.UserModel
+	global.Mdb.Where("username = ?", username).First(&res)
+
+	if res.Id == 0 {
+		return 0, fmt.Errorf("<UNK>")
+	}
+
+	return res.Id, nil
+}
+
+func FindProcessId(form types.ProcessModel, userId uint) types.ProcessModel {
 	var res types.ProcessModel
-	global.Mdb.Where("process = ? AND date = ? AND hour = ?", form.Process, form.Date, form.Hour).Find(&res)
+	global.Mdb.Where("process = ? AND date = ? AND hour = ? AND user_id = ?", form.Process, form.Date, form.Hour, userId).Find(&res)
 	return res
 }
 
@@ -21,24 +32,25 @@ func FindTitleByIdAndTitle(id uint, title string) types.TitleModel {
 }
 
 // InsertAllProcessAndTitle 插入
-func InsertAllProcessAndTitle(form []types.UploadForm) {
+func InsertAllProcessAndTitle(form []types.UploadForm, userId uint) {
 	db := global.Mdb
 
 	// 循环处理 process
 	for i := 0; i < len(form); i++ {
 		j := types.ProcessModel{
 			Process: form[i].Process,
+			UserId:  userId,
 			Date:    form[i].Time.Format("2006-01-02"),
 			Hour:    uint8(form[i].Time.Hour()),
 		}
 
-		res := FindProcessId(j)
+		res := FindProcessId(j, userId)
 
 		if res.Id == 0 {
 			// 未查询到 插入该数据
 			db.Create(&j)
 
-			j1 := FindProcessId(j)
+			j1 := FindProcessId(j, userId)
 
 			n := types.TitleModel{
 				ProcessId: j1.Id,
@@ -69,15 +81,13 @@ func InsertAllProcessAndTitle(form []types.UploadForm) {
 	}
 }
 
-func FindAllByDay() []types.ProcessModel {
+func FindAllByDay(userId uint, day string) []types.ProcessModel {
 	db := global.Mdb
-
-	day := time.Now().Format("2006-01-02")
 
 	var res []types.ProcessModel
 
 	// 使用Preload加载关联的Titles数据
-	err := db.Where("date = ?", day).
+	err := db.Where("date = ? AND user_id = ?", day, userId).
 		Preload("Titles").
 		Find(&res).Error
 

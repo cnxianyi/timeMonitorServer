@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"github.com/gin-gonic/gin"
 	"timeMonitorServer/models"
 	"timeMonitorServer/types"
@@ -16,10 +17,13 @@ func Upload(c *gin.Context) {
 			"code": 400,
 			"err":  err.Error(),
 		})
+		fmt.Println(form)
 		return
 	}
 
-	models.InsertAllProcessAndTitle(form)
+	userId, err := models.FindUserIdByUserName(form[0].UserName)
+
+	models.InsertAllProcessAndTitle(form, userId)
 
 	c.JSON(200, gin.H{
 		"code": 200,
