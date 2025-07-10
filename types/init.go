@@ -9,7 +9,13 @@ type UploadForm struct {
 	Process  string    `json:"process" binding:"required"`
 	Time     time.Time `json:"time" binding:"required"`
 	UserName string    `json:"user_name" binding:"required"`
-	Password string    `json:"password"`
+}
+
+type UploadTimeForm struct {
+	Username string `json:"username" binding:"required"`
+	Password string `json:"password" binding:"required"`
+	Time     uint   `json:"time" binding:"required"`
+	Cycle    *int   `json:"cycle" binding:"required"` // 0 every 1 daily
 }
 
 type UserModel struct {

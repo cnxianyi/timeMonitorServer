@@ -1,7 +1,6 @@
 package controller
 
 import (
-	"fmt"
 	"github.com/gin-gonic/gin"
 	"timeMonitorServer/models"
 	"timeMonitorServer/types"
@@ -17,7 +16,6 @@ func Upload(c *gin.Context) {
 			"code": 400,
 			"err":  err.Error(),
 		})
-		fmt.Println(form)
 		return
 	}
 
@@ -29,4 +27,32 @@ func Upload(c *gin.Context) {
 		"code": 200,
 		"msg":  "ok",
 	})
+}
+
+func EditTime(c *gin.Context) {
+	var form types.UploadTimeForm
+
+	err := c.ShouldBindJSON(&form)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code": 400,
+			"err":  err.Error(),
+		})
+		return
+	}
+
+	err = models.EditUserTime(form.Username, form.Password, form.Time, *form.Cycle)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code": 400,
+			"err":  err.Error(),
+		})
+		return
+	}
+
+	c.JSON(200, gin.H{
+		"code": 200,
+		"msg":  "ok",
+	})
+
 }

@@ -26,6 +26,11 @@ func Init() *gin.Engine {
 
 	router.GET("/", controller.All)
 
-	router.Run() // 监听并在 0.0.0.0:8080 上启动服务
+	router.POST("/edit/time", controller.EditTime)
+
+	err := router.Run()
+	if err != nil {
+		return nil
+	} // 监听并在 0.0.0.0:8080 上启动服务
 	return router
 }
