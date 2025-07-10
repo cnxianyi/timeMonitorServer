@@ -3,6 +3,7 @@ package models
 import (
 	"fmt"
 	"log"
+	"time"
 	"timeMonitorServer/global"
 	"timeMonitorServer/types"
 )
@@ -116,4 +117,40 @@ func EditUserTime(username string, password string, time uint, cycle int) error 
 	}
 
 	return nil
+}
+
+func FindLimit(username string) uint {
+	var form types.UserModel
+	global.Mdb.Where("username = ?", username).First(&form)
+
+	return form.DailyTime
+}
+
+func ComputedAll(username string) (uint, error) {
+
+	db := global.Mdb
+
+	id, err := FindUserIdByUserName(username)
+	if err != nil {
+		return 0, err
+	}
+
+	var all uint
+
+	targetDate := time.Now().Format("2006-01-02")
+
+	sqlQuery := `
+		SELECT SUM(t.time) as 'all'
+		FROM processes p
+		JOIN titles t ON t.process_id = p.id
+		WHERE p.date = ? AND p.user_id = ?;
+	`
+	// 注意：在 GORM Raw 方法中，参数替换符是 `?`。GORM 会安全地转义和替换。
+	err = db.Raw(sqlQuery, targetDate, id).Scan(&all).Error
+	if err != nil {
+		return 0, err
+	}
+
+	return all, nil
+
 }

@@ -23,9 +23,17 @@ func Upload(c *gin.Context) {
 
 	models.InsertAllProcessAndTitle(form, userId)
 
+	limit := models.FindLimit(form[0].UserName)
+
+	all, err := models.ComputedAll(form[0].UserName)
+
 	c.JSON(200, gin.H{
 		"code": 200,
 		"msg":  "ok",
+		"data": types.UploadResponse{
+			Lave:   int(limit - all),
+			Notice: "",
+		},
 	})
 }
 

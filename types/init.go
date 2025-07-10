@@ -69,6 +69,10 @@ type ProcessResponse struct {
 	Titles  []TitleResponse `json:"titles"`
 }
 
+type UploadResponse struct {
+	Lave   int    `json:"lave"`
+	Notice string `json:"notice"`
+}
 type TitleResponse struct {
 	Title string `json:"title"`
 	Time  uint   `json:"time"`
