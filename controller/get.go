@@ -2,6 +2,7 @@ package controller
 
 import (
 	"github.com/gin-gonic/gin"
+	"strings"
 	"time"
 	"timeMonitorServer/models"
 	"timeMonitorServer/types"
@@ -44,18 +45,35 @@ func All(c *gin.Context) {
 
 	var lastTime time.Time
 
+	titleClass := models.FindTitleClass()
+
+	// 初始化
 	var processResponses []types.ProcessResponse = []types.ProcessResponse{}
+	// 初始化每个 process
 	for _, pm := range res {
 		var titleResponses []types.TitleResponse
+
 		for _, tm := range pm.Titles {
 
+			// TODO 目前只判断了 title
 			if tm.UpdateTime.After(lastTime) {
 				lastTime = tm.UpdateTime
 			}
 
+			// 默认为 其他
+			var legend uint = 4
+
+			for _, tc := range titleClass {
+				if strings.Contains(tm.Title, tc.Content) {
+					legend = tc.Legend
+					break
+				}
+			}
+
 			titleResponses = append(titleResponses, types.TitleResponse{
-				Title: tm.Title,
-				Time:  tm.Time,
+				Title:  tm.Title,
+				Time:   tm.Time,
+				Legend: legend,
 			})
 		}
 

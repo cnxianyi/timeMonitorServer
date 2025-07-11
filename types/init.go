@@ -18,6 +18,20 @@ type UploadTimeForm struct {
 	Cycle    *int   `json:"cycle" binding:"required"` // 0 every 1 daily
 }
 
+type TitleClassModel struct {
+	Id         uint      `json:"id" gorm:"primaryKey"`
+	Model      uint      `json:"model"`   // 1 全等 2 内含
+	Content    string    `json:"title"`   // 匹配内容
+	Legend     uint      `json:"legend"`  // 返回值 1 学习 2 娱乐 3 社交 4 其他
+	Process    uint      `json:"process"` // 1 匹配 2 不匹配
+	CreateTime time.Time `json:"create_time" gorm:"autoCreateTime"`
+	UpdateTime time.Time `json:"update_time" gorm:"autoUpdateTime"`
+}
+
+func (TitleClassModel) TableName() string {
+	return "title_class" // Explicitly setting table name
+}
+
 type UserModel struct {
 	Id         uint      `json:"id" gorm:"primaryKey"`
 	Username   string    `json:"username" binding:"required"`
@@ -74,6 +88,7 @@ type UploadResponse struct {
 	Notice string `json:"notice"`
 }
 type TitleResponse struct {
-	Title string `json:"title"`
-	Time  uint   `json:"time"`
+	Title  string `json:"title"`
+	Time   uint   `json:"time"`
+	Legend uint   `json:"legend"`
 }

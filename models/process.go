@@ -154,3 +154,13 @@ func ComputedAll(username string) (uint, error) {
 	return all, nil
 
 }
+
+func FindTitleClass() []types.TitleClassModel {
+	db := global.Mdb
+
+	var form []types.TitleClassModel
+
+	db.Find(&form)
+
+	return form
+}

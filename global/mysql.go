@@ -25,7 +25,7 @@ func InitMysql() error {
 		return err
 	}
 
-	err = db.AutoMigrate(types.ProcessModel{}, types.TitleModel{})
+	err = db.AutoMigrate(types.ProcessModel{}, types.TitleModel{}, types.TitleClassModel{})
 	if err != nil {
 		return err
 	}
