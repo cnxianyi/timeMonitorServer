@@ -42,10 +42,17 @@ func All(c *gin.Context) {
 
 	res := models.FindAllByDay(userId, date)
 
+	var lastTime time.Time
+
 	var processResponses []types.ProcessResponse = []types.ProcessResponse{}
 	for _, pm := range res {
 		var titleResponses []types.TitleResponse
 		for _, tm := range pm.Titles {
+
+			if tm.UpdateTime.After(lastTime) {
+				lastTime = tm.UpdateTime
+			}
+
 			titleResponses = append(titleResponses, types.TitleResponse{
 				Title: tm.Title,
 				Time:  tm.Time,
@@ -60,9 +67,10 @@ func All(c *gin.Context) {
 	}
 
 	c.JSON(200, gin.H{
-		"code": 200,
-		"msg":  "ok",
-		"data": processResponses,
+		"code":     200,
+		"msg":      "ok",
+		"data":     processResponses,
+		"lastTime": lastTime,
 	})
 	return
 }
