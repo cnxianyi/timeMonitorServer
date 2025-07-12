@@ -84,6 +84,11 @@ func All(c *gin.Context) {
 		})
 	}
 
+	// 处理当天没有数据时的lastTime
+	if len(processResponses) == 0 {
+		lastTime = models.FindLastTime(userId)
+	}
+
 	c.JSON(200, gin.H{
 		"code":     200,
 		"msg":      "ok",

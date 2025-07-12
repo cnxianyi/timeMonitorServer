@@ -164,3 +164,22 @@ func FindTitleClass() []types.TitleClassModel {
 
 	return form
 }
+
+func FindLastTime(userId uint) time.Time {
+	db := global.Mdb
+
+	var maxUpdateTime time.Time
+	// Using Joins and Select for MAX(t.update_time)
+	sqlQuery := `
+				SELECT MAX(t.update_time)
+				FROM processes p , titles t
+				WHERE p.user_id = ?
+				`
+	// 注意：在 GORM Raw 方法中，参数替换符是 `?`。GORM 会安全地转义和替换。
+	err := db.Raw(sqlQuery, userId).Scan(&maxUpdateTime).Error
+	if err != nil {
+		return time.Time{}
+	}
+
+	return maxUpdateTime
+}
