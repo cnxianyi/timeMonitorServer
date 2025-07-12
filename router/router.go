@@ -26,6 +26,8 @@ func Init() *gin.Engine {
 
 	router.GET("/", controller.All)
 
+	router.GET("/limit", controller.Limit)
+
 	router.POST("/edit/time", controller.EditTime)
 
 	err := router.Run()

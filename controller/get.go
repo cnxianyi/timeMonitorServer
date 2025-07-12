@@ -97,3 +97,35 @@ func All(c *gin.Context) {
 	})
 	return
 }
+
+func Limit(c *gin.Context) {
+	userName := c.Query("userName")
+
+	if userName == "" {
+		c.JSON(400, gin.H{
+			"msg": "userName is empty",
+		})
+		return
+	}
+
+	userId, err := models.FindUserIdByUserName(userName)
+	if err != nil {
+		c.JSON(400, gin.H{
+			"code": 400,
+			"msg":  "err user",
+		})
+		return
+	}
+
+	limit := models.FindLimit(userId)
+
+	c.JSON(200, gin.H{
+		"code": 200,
+		"msg":  "ok",
+		"data": gin.H{
+			"dailyLimit": limit.DailyTime,
+			"everyLimit": limit.EveryTime,
+		},
+	})
+
+}

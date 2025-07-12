@@ -119,11 +119,18 @@ func EditUserTime(username string, password string, time uint, cycle int) error 
 	return nil
 }
 
-func FindLimit(username string) uint {
+func FindDailyLimit(username string) uint {
 	var form types.UserModel
 	global.Mdb.Where("username = ?", username).First(&form)
 
 	return form.DailyTime
+}
+
+func FindLimit(userId uint) types.UserModel {
+	var form types.UserModel
+	global.Mdb.Where("id = ?", userId).First(&form)
+
+	return form
 }
 
 func ComputedAll(username string) (uint, error) {

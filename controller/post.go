@@ -23,7 +23,7 @@ func Upload(c *gin.Context) {
 
 	models.InsertAllProcessAndTitle(form, userId)
 
-	limit := models.FindLimit(form[0].UserName)
+	limit := models.FindDailyLimit(form[0].UserName)
 
 	all, err := models.ComputedAll(form[0].UserName)
 
