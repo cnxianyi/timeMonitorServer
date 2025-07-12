@@ -5,6 +5,7 @@ import (
 	"timeMonitorServer/config"
 	"timeMonitorServer/global"
 	"timeMonitorServer/router"
+	"timeMonitorServer/utils"
 )
 
 func main() {
@@ -15,6 +16,8 @@ func main() {
 		fmt.Println(err)
 		return
 	}
+
+	utils.InitCronJobs()
 
 	router.Init()
 }

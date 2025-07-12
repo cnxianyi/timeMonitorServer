@@ -188,3 +188,23 @@ func FindLastTime(userId uint) time.Time {
 
 	return maxUpdateTime
 }
+
+func UpdateAllDailyTime() error {
+	db := global.Mdb
+
+	sqlQuery := `
+             UPDATE users
+             SET daily_time = every_time,
+                 update_time = ?
+             `
+	// 使用 db.Exec 而不是 db.Raw 来执行不返回结果的 DML (Data Manipulation Language) 语句，如 UPDATE。
+	// db.Exec 返回的 Result 包含 RowsAffected。
+	// time.Now() 作为参数传递，GORM 会安全地将其转换为数据库时间格式。
+	result := db.Exec(sqlQuery, time.Now()) // 将当前时间作为参数传递
+
+	if result.Error != nil {
+		return result.Error
+	}
+
+	return nil
+}
