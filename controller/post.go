@@ -49,7 +49,7 @@ func EditTime(c *gin.Context) {
 		return
 	}
 
-	err = models.EditUserTime(form.Username, form.Password, form.Time, *form.Cycle)
+	err = models.EditUserTime(form.Username, form.Password, form.DailyTime, form.EveryTime)
 	if err != nil {
 		c.JSON(400, gin.H{
 			"code": 400,

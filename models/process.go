@@ -99,22 +99,20 @@ func FindAllByDay(userId uint, day string) []types.ProcessModel {
 	return res
 }
 
-func EditUserTime(username string, password string, time uint, cycle int) error {
+func EditUserTime(username string, password string, dailyTime uint, everyTime uint) error {
 	db := global.Mdb
 
-	if cycle == 0 { // every
-		err := db.Model(&types.UserModel{}).Where("username = ? AND password = ?", username, password).Update("every_time", time).Error
+	var user types.UserModel
 
-		if err != nil {
-			return err
-		}
-	} else if cycle == 1 { // daily
-		err := db.Model(&types.UserModel{}).Where("username = ? AND password = ?", username, password).Update("daily_time", time).Error
-
-		if err != nil {
-			return err
-		}
+	limit := db.Where("username = ? AND password = ?", username, password).First(&user)
+	if limit.RowsAffected == 0 {
+		return fmt.Errorf("<UNK>")
 	}
+
+	user.EveryTime = everyTime
+	user.DailyTime = dailyTime
+
+	db.Save(&user)
 
 	return nil
 }

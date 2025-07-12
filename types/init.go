@@ -12,10 +12,10 @@ type UploadForm struct {
 }
 
 type UploadTimeForm struct {
-	Username string `json:"username" binding:"required"`
-	Password string `json:"password" binding:"required"`
-	Time     uint   `json:"time" binding:"required"`
-	Cycle    *int   `json:"cycle" binding:"required"` // 0 every 1 daily
+	Username  string `json:"username" binding:"required"`
+	Password  string `json:"password" binding:"required"`
+	DailyTime uint   `json:"dailyTime" binding:"required"`
+	EveryTime uint   `json:"everyTime" binding:"required"`
 }
 
 type TitleClassModel struct {
